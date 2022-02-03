@@ -1,20 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Harmonious P
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+	<div class="container mt-4">
+		<section class="row mb-5 text-center">
+			<h1>Welcome to the Anime and Manga Lovers</h1>
+			<p>Great database isn't it Hayao san ? ;)</p>
+		</section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/patrickyim/Desktop/dwwm2021-3/projet-perso-jury/harmonious-project/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/patrickyim/Desktop/dwwm2021-3/projet-perso-jury/harmonious-project/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+		<section class="row align-items-md-stretch mb-5">
+			<div class="col-md-2"></div>
+			<div class="col-md-4" style="height: 15rem;">
+				<a href="/collectings/1" class=" text-decoration-none">
+					<div class="h-100 p-5 text-white bg-dark rounded-3 d-flex align-items-center justify-content-center">
+						<h2 class="text-center">Anime</h2>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="/collectings/2" class="text-decoration-none">
+					<div class="h-100 p-5 text-dark bg-light border rounded-3 d-flex align-items-center justify-content-center">
+						<h2 class="text-center">Manga</h2>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-2"></div>
+		</section>
+
+
+		<section class="row mb-5">
+			<h2 class="text-center">Latest items</h2>
+			<div class="row row-cols-1 row-cols-md-6 g-4">
+				{% for item in items %}
+					<div class="col">
+						<a href="{{ path('item_show', {'id': item.id}) }}" class="text-decoration-none">
+							<div class="card h-100">
+								{% if item.collecting.id == 1 %}
+									<div class="card-header bg-dark text-center text-white">{{ item.title }}</div>
+								{% else %}
+									<div class="card-header bg-light text-center text-dark">{{ item.title }}</div>
+								{% endif %}
+								<div class="card-body">
+									<img src="{{ item.imageUrl }}" class="card-img-top" alt="image of {{ item.title }}">
+
+								{# <h5 class="card-title text-center">{{ item.title }}</h5> #}
+									{# <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> #}
+								</div>
+								{% if item.collecting.id == 1 %}
+									<div class="card-footer bg-dark text-center">
+										<small class="text-white">Anime</small>
+									</div>
+								{% else %}
+									<div class="card-footer bg-light text-center">
+										<small class="text-dark">Manga</small>
+									</div>
+								{% endif %}
+							</div>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+
+		</section>
+	</div>
 {% endblock %}

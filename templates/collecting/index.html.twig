@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Collecting index
+{% endblock %}
+
+{% block body %}
+	<h1 class="mt-4">Collecting index</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Modified_at</th>
+				<th>Created_at</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for collecting in collectings %}
+				<tr>
+					<td>{{ collecting.id }}</td>
+					<td>{{ collecting.name }}</td>
+					<td>{{ collecting.modifiedAt ? collecting.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
+					<td>{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+					<td>
+						<a href="{{ path('collecting_show', {'collecting': collecting.id}) }}">show</a>
+						<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('collecting_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Item
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1>Create new Item to
+			{{ collecting.name }}</h1>
+
+		<hr>
+
+		{{ form_start(collectingItemForm)}}
+		{{ form_row(collectingItemForm, {
+  "label": "Multiselect",
+  "params": {
+    "multiselect": true
+  }
+})}}
+		{# {{ form(collectingItemForm)}} #}
+		{# {{ include('item/_form.html.twig') }} #}
+			<a href="{{ path('collecting_show', {collecting: collecting.id}) }}"> back to list</a>
+	</div>
+	{{ form_end(collectingItemForm)}}
+
+{% endblock %}

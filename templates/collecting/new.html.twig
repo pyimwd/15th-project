@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Collecting
+{% endblock %}
+
+{% block body %}
+	<h1>Create new Collecting</h1>
+
+	<hr>
+
+	{{ form_start(addCollectingForm)}}
+	{{ form_row(addCollectingForm)}}
+
+
+	<div class="row">
+		<div class="col text-start">
+			<a href="{{ path('collecting') }}" class="btn btn-primary">back to list
+			</a>
+		</div>
+		<div class="col text-end">
+			<input type="submit" value="Save" class="btn btn-success">
+		</div>
+	</div>
+	{{ form_end(addCollectingForm)}}
+
+{% endblock %}
