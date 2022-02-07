@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update
+	{{ item.title}}
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid mt-4">
+		<h1>Update
+			{{ item.title}}</h1>
+
+		<hr>
+
+		{{ form_start(updateItemForm)}}
+		{{ form_row(updateItemForm.title)}}
+		{{ form_row(updateItemForm.synopsis)}}
+		{{ form_row(updateItemForm.chapters)}}
+		{{ form_row(updateItemForm.volumes_or_episodes)}}
+		{{ form_row(updateItemForm.start_date)}}
+		{{ form_row(updateItemForm.end_date)}}
+		{{ form_row(updateItemForm.image_url)}}
+		{{ form_row(updateItemForm.category)}}
+
+		<div class="row mt-4 mb-4">
+			<div class="col text-end">
+				<button class="btn btn-secondary">
+					<a href="{{ path('collecting_show', {'collecting': collecting.id}) }}" class="text-decoration-none text-white">Cancel</a>
+				</button>
+				<button type="submit" class="btn btn-success">
+					Update
+				</button>
+			</div>
+
+		</div>
+
+		{# {{ include('item/_form.html.twig', {'button_label': 'Update'}) }} #}
+
+		{# {{ include('item/_delete_form.html.twig') }} #}
+		{{ form_end(updateItemForm)}}
+	{% endblock %}

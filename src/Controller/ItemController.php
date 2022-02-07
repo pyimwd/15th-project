@@ -49,7 +49,7 @@ class ItemController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="item_show", methods={"GET"})
+     * @Route("/{item}", name="item_show", methods={"GET"})
      */
     public function show(Item $item): Response
     {
@@ -83,7 +83,7 @@ class ItemController extends AbstractController
      */
     public function delete(Request $request, Item $item, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$item->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $item->getId(), $request->request->get('_token'))) {
             $entityManager->remove($item);
             $entityManager->flush();
         }

@@ -1,14 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Collecting
+{% block title %}Update
+	{{ collecting.name }}
 {% endblock %}
 
 {% block body %}
-	<h1>Edit Collecting</h1>
+	<container>
+		<div class="row mt-4 mb-4">
+			<h1>Update
+				{{ collecting.name }}</h1>
+		</div>
 
-	{{ include('collecting/_form.html.twig', {'button_label': 'Update'}) }}
+		<hr>
 
-	<a href="{{ path('collecting') }}">back to list</a>
+		{{ form_start(updateCollectingForm)}}
+		{{ form_row(updateCollectingForm.name)}}
 
-	{{ include('collecting/_delete_form.html.twig') }}
+		<div class="row mt-4 mb-4">
+			<div class="col text-start">
+				{{ include('collecting/_delete_form.html.twig') }}
+			</div>
+			<div class="col text-end">
+				<button class="btn btn-secondary">
+					<a href="{{ path('collecting') }}" class="text-decoration-none text-white">Cancel</a>
+				</button>
+				<button type="submit" class="btn btn-success">
+					Update
+				</button>
+			</div>
+
+		</div>
+
+
+		{# {{ include('collecting/_form.html.twig', {'button_label': 'Update'}) }} #}
+
+		{# <a href="{{ path('collecting') }}">back to list</a> #}
+
+	</container>
+	{{ form_end(updateCollectingForm)}}
 {% endblock %}

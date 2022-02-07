@@ -4,37 +4,71 @@
 {% endblock %}
 
 {% block body %}
-	<h1 class="mt-4">Collecting index</h1>
+	<container fluid>
+		<div class="row mt-4">
+			<h1 class="mt-4">Collections index</h1>
+		</div>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Name</th>
-				<th>Modified_at</th>
-				<th>Created_at</th>
-				<th>actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for collecting in collectings %}
-				<tr>
-					<td>{{ collecting.id }}</td>
-					<td>{{ collecting.name }}</td>
-					<td>{{ collecting.modifiedAt ? collecting.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
-					<td>{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-					<td>
-						<a href="{{ path('collecting_show', {'collecting': collecting.id}) }}">show</a>
-						<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}">edit</a>
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="5">no records found</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+		<hr>
 
-	<a href="{{ path('collecting_new') }}">Create new</a>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		<div
+			class="row mt-4 mb-4">
+			{# {% if is_granted('ROLE_ADMIN') %} #}
+			<div class="col-6 text-start">
+				<a href="{{ path('collecting_new') }}" class="btn btn-success">Add new collection</a>
+			</div>
+			{# {% endif %} #}
+		</div>
+
+
+		<table class="table mb-5">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Modified_at</th>
+					<th>Created_at</th>
+					<th>actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for collecting in collectings %}
+					<tr>
+						<td>{{ collecting.id }}</td>
+						<td>{{ collecting.name }}</td>
+						<td>{{ collecting.modifiedAt ? collecting.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
+						<td>{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+						<td>
+							<button class="btn btn-secondary btn-sm me-3">
+								<a href="{{ path('collecting_show', {'collecting': collecting.id}) }}" class="text-decoration-none text-light">
+									<i class="fas fa-eye"></i>
+								</a>
+							</button>
+							<button class="btn btn-primary btn-sm me-3">
+								<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}" class="text-decoration-none text-light">
+									<i class="fas fa-edit"></i>
+								</a>
+							</button>
+							<button class="btn btn-danger btn-sm">
+								<a href="{{ path('collecting_delete', {'id': collecting.id}) }}" class="text-decoration-none text-light">
+									<i class="fas fa-trash"></i>
+								</a>
+							</button>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="5">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</container>
 {% endblock %}

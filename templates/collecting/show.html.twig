@@ -1,98 +1,141 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Collecting
+{% block title %}
+	{{ collecting.name}}
 {% endblock %}
 
 {% block body %}
-	<div class="row mt-4">
-		<h1>{{ collecting.name}}</h1>
-	</div>
-
-	<hr>
-
-	{% for message in app.flashes('success') %}
-		<div class="alert alert-success">
-			{{ message }}
+	<container>
+		<div class="row mt-4">
+			<h1>{{ collecting.name}}</h1>
 		</div>
-	{% endfor %}
 
-	<div class="row">
-		<div class="col-6"></div>
-		<div class="col-6 d-flex justify-content-end">Created at :
-			{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d H:i:s') : '' }}</div>
-	</div>
+		<hr>
 
-	<div class="row row-cols-1 row-cols-md-6 g-4 mt-4 mb-4">
-		{% for item in items %}
-			<div class="col">
-				<a href="{{ path('item_show', {'id': item.id}) }}" class="text-decoration-none">
-					<div class="card h-100">
-						{% if item.collecting.id == 1 %}
-							<div class="card-header bg-dark text-center text-white">{{ item.title }}</div>
-						{% else %}
-							<div class="card-header bg-light text-center text-dark">{{ item.title }}</div>
-						{% endif %}
-						<div class="card-body" style="min-height : 18rem;">
-							<img src=" {{ item.imageUrl }} " class=" card-img-top" alt=" image of {{ item.title }} ">
-						{# <h5 class="card-title text-center">{{ item.title }}</h5> #}
-							{# <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> #}
-						</div>
-						<div class="card-footer bg-dark text-center">
-							<div class="row">
-								<div class="col d-flex justify-content-center">
-									<button class="btn btn-light btn-sm">
-										<a href="{{ path('item_show', {'id': item.id}) }}" class="text-decoration-none text-dark">
-											<i class="fas fa-eye"></i>
-										</a>
-									</button>
-								</div>
-								<div class="col d-flex justify-content-center">
-									<button class="btn btn-light btn-sm">
-										<a href="{{ path('item_edit', {'id': item.id}) }}" class="text-decoration-none text-dark">
-											<i class="fas fa-edit"></i>
-										</a>
-									</button>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</a>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
 			</div>
 		{% endfor %}
-	</div>
+
+		<div
+			class="row">
+			{# {% if is_granted('ROLE_ADMIN') %} #}
+			<div class="col-6 text-start">
+				<a href="{{ path('collecting_new_item', {'collecting': collecting.id}) }}" class="btn btn-success">Add new item</a>
+			</div>
+			{# {% endif %} #}
+			<div class="col-6 text-end">Created at :
+				{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d H:i:s') : '' }}</div>
+		</div>
+
+		<div class="row row-cols-1 row-cols-md-6 g-4 mt-4 mb-4">
+			{% for item in items %}
+				<div class="col">
+					<a href="{{ path('collecting_show_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none">
+						<div class="card h-100">
+							{% if item.collecting.id == 1 %}
+								<div class="card-header bg-dark text-center text-white d-flex align-items-center justify-content-center" style="min-height : 4rem;">{{ item.title }}</div>
+							{% else %}
+								<div class="card-header bg-light text-center text-dark d-flex align-items-center justify-content-center" style="min-height : 4rem;">{{ item.title }}</div>
+							{% endif %}
+							<div class="card-body" style="min-height : 20rem;">
+								<img src=" {{ item.imageUrl }} " class=" card-img-top" alt=" image of {{ item.title }} ">
+							{# <h5 class="card-title text-center">{{ item.title }}</h5> #}
+								{# <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> #}
+							</div>
+
+							{% if item.collecting.id == 1 %}
+								<div class="card-footer bg-dark text-center">
+									<div class="row">
+										<div class="col d-flex justify-content-center">
+											<button class="btn btn-light btn-sm">
+												<a href="{{ path('collecting_show_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-dark">
+													<i class="fas fa-eye"></i>
+												</a>
+											</button>
+										</div>
+										<div class="col d-flex justify-content-center">
+											<button class="btn btn-light btn-sm">
+												<a href="{{ path('collecting_update_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-dark">
+													<i class="fas fa-edit"></i>
+												</a>
+											</button>
+										</div>
+										<div class="col d-flex justify-content-center">
+											<button class="btn btn-danger btn-sm">
+												<a href="{{ path('collecting_delete_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-light">
+													<i class="fas fa-trash"></i>
+												</a>
+											</button>
+										</div>
+									</div>
+								</div>
+							{% else %}
+								<div class="card-footer bg-light text-center">
+									<div class="row">
+										<div class="col d-flex justify-content-center">
+											<button class="btn btn-secondary btn-sm">
+												<a href="{{ path('collecting_show_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-light">
+													<i class="fas fa-eye"></i>
+												</a>
+											</button>
+										</div>
+										<div class="col d-flex justify-content-center">
+											<button class="btn btn-secondary btn-sm">
+												<a href="{{ path('collecting_update_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-light">
+													<i class="fas fa-edit"></i>
+												</a>
+											</button>
+										</div>
+										<div class="col d-flex justify-content-center">
+											<button class="btn btn-danger btn-sm">
+												<a href="{{ path('collecting_delete_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-light">
+													<i class="fas fa-trash"></i>
+												</a>
+											</button>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+
+		<hr>
+
+		<div class="row mt-4 mb-4">
+			<div class="col text-start">
+				{{ include('collecting/_delete_form.html.twig') }}
+			</div>
+			<div class="col text-end">
+				<button class="btn btn-secondary">
+					<a href="{{ path('collecting') }}" class="text-decoration-none text-white">Back to list</a>
+				</button>
+				<button class="btn btn-primary">
+					<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}" class="text-decoration-none text-white">Update
+						{{ collecting.name }}</a>
+				</button>
+			</div>
+		</div>
 
 
-	<a href="{{ path('collecting') }}">back to list</a>
+		{# {{ include('collecting/_delete_form.html.twig') }}
+																																																																																																											
+																																																																																																											    <div class="row">
+																																																																																																													<div class="card-body">
+																																																																																																														<a href="{{ path('collectione') }}" class="btn btn-primary">Retour à la liste</a>
+																																																																																																														{% if is_granted('ROLE_ADMIN') %}
+																																																																																																															<a href="{{ path('collectione_update', {'collectione': collectione.id}) }}" class="btn btn-info">
+																																																																																																																Modifier la collection
+																																																																																																															</a>
+																																																																																																															<a href="{{ path('collectione_delete', {'collectione': collectione.id}) }}" class="btn btn-info">
+																																																																																																																Supprimer la collection
+																																																																																																															</a>
+																																																																																																														{% endif %}
+																																																																																																													</div> #}
 
-	<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}">edit collecting</a>
-
-	<a href="{{ path('collecting_delete', {'collecting': collecting.id}) }}" class="btn btn-info">
-		Supprimer la collection
-	</a>
-
-	{# {{ include('collecting/_delete_form.html.twig') }}
-																																		
-																																		    <div class="row">
-																																				<div class="card-body">
-																																					<a href="{{ path('collectione') }}" class="btn btn-primary">Retour à la liste</a>
-																																					{% if is_granted('ROLE_ADMIN') %}
-																																						<a href="{{ path('collectione_update', {'collectione': collectione.id}) }}" class="btn btn-info">
-																																							Modifier la collection
-																																						</a>
-																																						<a href="{{ path('collectione_delete', {'collectione': collectione.id}) }}" class="btn btn-info">
-																																							Supprimer la collection
-																																						</a>
-																																					{% endif %}
-																																				</div> #}
-
-	<hr>
-
-	{# {% if is_granted('ROLE_ADMIN') %} #}
-	<div class="col text-end">
-		<a href="{{ path('collecting_new_item', {'collecting': collecting.id}) }}" class="btn btn-info">Ajouter des items</a>
-	</div>
-	{# {% endif %} #}
-</div>
-
-<hr>{% endblock %}
+	</container>
+{% endblock %}

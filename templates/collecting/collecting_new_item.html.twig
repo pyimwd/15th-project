@@ -4,23 +4,40 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container-fluid">
+	<div class="container-fluid mt-4">
 		<h1>Create new Item to
 			{{ collecting.name }}</h1>
 
 		<hr>
 
 		{{ form_start(collectingItemForm)}}
-		{{ form_row(collectingItemForm, {
-  "label": "Multiselect",
-  "params": {
-    "multiselect": true
-  }
-})}}
+		{{ form_row(collectingItemForm.title)}}
+		{{ form_row(collectingItemForm.synopsis)}}
+		{{ form_row(collectingItemForm.chapters)}}
+		{{ form_row(collectingItemForm.volumes_or_episodes)}}
+		{{ form_row(collectingItemForm.start_date)}}
+		{{ form_row(collectingItemForm.end_date)}}
+		{{ form_row(collectingItemForm.image_url)}}
+		{{ form_row(collectingItemForm.category)}}
+
+
+		<hr>
+
+		<div class="row mt-4 mb-4">
+			<div class="col text-end">
+				<button class="btn btn-secondary">
+					<a href="{{ path('collecting_show', {'collecting': collecting.id}) }}" class="text-decoration-none text-white">Cancel</a>
+				</button>
+				<button type="submit" class="btn btn-success">
+					Save
+				</button>
+			</div>
+		</div>
+
+
 		{# {{ form(collectingItemForm)}} #}
 		{# {{ include('item/_form.html.twig') }} #}
-			<a href="{{ path('collecting_show', {collecting: collecting.id}) }}"> back to list</a>
-	</div>
-	{{ form_end(collectingItemForm)}}
 
+		{{ form_end(collectingItemForm)}}
+	</div>
 {% endblock %}

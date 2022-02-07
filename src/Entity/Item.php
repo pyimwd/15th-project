@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Entity\User;
 use App\Entity\Category;
+use App\Entity\Collecting;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=ItemRepository::class)
@@ -23,21 +26,25 @@ class Item
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=2, max=255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Length(min=15)
      */
     private $synopsis;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer")
      */
     private $chapters;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer")
      */
     private $volumes_or_episodes;
 
@@ -53,6 +60,7 @@ class Item
 
     /**
      * @ORM\Column(type="string", length=510, nullable=true)
+     * @Assert\Url
      */
     private $image_url;
 

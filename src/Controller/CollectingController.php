@@ -6,6 +6,7 @@ use App\Entity\Item;
 use App\Form\ItemType;
 use App\Entity\Collecting;
 use App\Entity\Category;
+use App\Form\CategoryType;
 use App\Form\CollectingType;
 use App\Repository\CollectingRepository;
 use App\Repository\ItemRepository;
@@ -50,9 +51,7 @@ class CollectingController extends AbstractController
 
             $this->addFlash('success', $addMessage);
 
-            return $this->redirectToRoute('collecting_show', [
-                'collecting' => $collecting->getId()
-            ]);
+            return $this->redirectToRoute('collecting');
         }
 
         return $this->render('collecting/new.html.twig', [
@@ -80,32 +79,32 @@ class CollectingController extends AbstractController
      */
     public function edit(Request $request, Collecting $collecting, EntityManagerInterface $entityManager)
     {
-        $form = $this->createForm(CollectingType::class, $collecting);
-        $form->handleRequest($request);
+        $updateCollectingForm = $this->createForm(CollectingType::class, $collecting);
+        $updateCollectingForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($updateCollectingForm->isSubmitted() && $updateCollectingForm->isValid()) {
             $entityManager->flush();
 
             return $this->redirectToRoute('collecting', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('collecting/edit.html.twig', [
-            'form' => $form->createView(),
+            'updateCollectingForm' => $updateCollectingForm->createView(),
             'collecting' => $collecting,
         ]);
     }
 
     /**
-     * @Route("/collectings/{collecting}/delete", name="collecting_delete", methods={"POST"})
+     * @Route("/collectings/{id}/delete", name="collecting_delete")
      */
-    public function delete(Collecting $collecting, EntityManagerInterface $entityManager)
+    public function delete(Collecting $collecting, EntityManagerInterface $entityManager, Item $item)
     {
-        $deleteMessage = $collecting->getName() . ' a bien été supprimé !';
+        $deleteMessage = 'La collection ' . $collecting->getName() . ' a bien été supprimée !';
 
         $entityManager->remove($collecting);
         $entityManager->flush();
 
-        $this->addFlash('success', $deleteMessage);
+        $this->addFlash('danger', $deleteMessage);
 
         return $this->redirectToRoute('collecting');
     }
@@ -115,7 +114,13 @@ class CollectingController extends AbstractController
      */
     public function new_item(Collecting $collecting, Request $request, EntityManagerInterface $entityManager)
     {
+
+        // if (!$item) {
+        //     $item = new Item();
+        // }
+
         $item = new Item();
+
         $item->setCollecting($collecting);
 
         $collectingItemForm = $this->createForm(ItemType::class, $item);
@@ -123,6 +128,10 @@ class CollectingController extends AbstractController
         $collectingItemForm->handleRequest($request);
 
         if ($collectingItemForm->isSubmitted() && $collectingItemForm->isValid()) {
+            // if(!$item->getId()) {
+            //     $item->setCreatedAt(new \DateTimeImmutable());
+            // }
+
             $item = $collectingItemForm->getData();
 
             $addMessage = 'L\'item ' . $item->getTitle() . ' a bien été ajouté.';
@@ -141,6 +150,65 @@ class CollectingController extends AbstractController
             'collecting' => $collecting,
             // 'category' => $category,
             'collectingItemForm' => $collectingItemForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/collectings/{collecting}/{item}/update_item", name="collecting_update_item")
+     */
+    public function update_item(Collecting $collecting, Request $request, EntityManagerInterface $entityManager, Item $item, ItemRepository $itemRepository)
+    {
+        $updateItemForm = $this->createForm(ItemType::class, $item);
+
+        $updateItemForm->handleRequest($request);
+
+        if ($updateItemForm->isSubmitted() && $updateItemForm->isValid()) {
+
+            $updateMessage = 'L\'item ' . $item->getTitle() . ' a bien été modifié.';
+
+            $entityManager->flush();
+
+            $this->addFlash('success', $updateMessage);
+
+            return $this->redirectToRoute('collecting_show', [
+                'collecting' => $collecting->getId()
+            ]);
+        }
+
+        return $this->render('collecting/update_item.html.twig', [
+            'updateItemForm' => $updateItemForm->createView(),
+            'collecting'    => $collecting,
+            'item'           => $item
+        ]);
+    }
+
+    /**
+     * @Route("/collectings/{collecting}/{item}", name="collecting_show_item")
+     */
+    public function show_item(Collecting $collecting, CollectingRepository $collectingRepository, Item $item, ItemRepository $itemRepository)
+    {
+        $item = $itemRepository->findOneById($item->getId());
+
+        return $this->render('collecting/show_item.html.twig', [
+            'collecting'    => $collecting,
+            'item' => $item,
+        ]);
+    }
+
+    /**
+     * @Route("/collectings/{collecting}/{item}/delete_item", name="collecting_delete_item")
+     */
+    public function delete_item(Collecting $collecting, EntityManagerInterface $entityManager, Item $item)
+    {
+        $deleteMessage = 'L\'item ' . $item->getTitle() . ' a bien été supprimé !';
+
+        $entityManager->remove($item);
+        $entityManager->flush();
+
+        $this->addFlash('danger', $deleteMessage);
+
+        return $this->redirectToRoute('collecting_show', [
+            'collecting' => $collecting->getId()
         ]);
     }
 }

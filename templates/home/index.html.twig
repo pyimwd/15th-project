@@ -8,7 +8,6 @@
 	<div class="container mt-4">
 		<section class="row mb-5 text-center">
 			<h1>Welcome to the Anime and Manga Lovers</h1>
-			<p>Great database isn't it Hayao san ? ;)</p>
 		</section>
 
 		<section class="row align-items-md-stretch mb-5">
@@ -36,14 +35,16 @@
 			<div class="row row-cols-1 row-cols-md-6 g-4">
 				{% for item in items %}
 					<div class="col">
-						<a href="{{ path('item_show', {'id': item.id}) }}" class="text-decoration-none">
+						<a
+							href="{{ path('collecting_show_item', {'collecting': item.collecting.id, 'item': item.id}) }}" class="text-decoration-none">
+							{# <a href="{{ path('item_show', {'item': item.id}) }}" class="text-decoration-none"> #}
 							<div class="card h-100">
 								{% if item.collecting.id == 1 %}
-									<div class="card-header bg-dark text-center text-white">{{ item.title }}</div>
+									<div class="card-header bg-dark text-center text-white d-flex align-items-center justify-content-center" style="min-height : 4rem;">{{ item.title }}</div>
 								{% else %}
-									<div class="card-header bg-light text-center text-dark">{{ item.title }}</div>
+									<div class="card-header bg-light text-center text-dark d-flex align-items-center justify-content-center" style="min-height : 4rem;">{{ item.title }}</div>
 								{% endif %}
-								<div class="card-body">
+								<div class="card-body" style="min-height : 20rem;">
 									<img src="{{ item.imageUrl }}" class="card-img-top" alt="image of {{ item.title }}">
 
 								{# <h5 class="card-title text-center">{{ item.title }}</h5> #}

@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CollectingRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Item;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CollectingRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CollectingRepository::class)
