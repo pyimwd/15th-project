@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Item;
 use App\Form\ItemType;
-use App\Entity\Collecting;
 use App\Entity\Category;
+use App\Entity\Collecting;
 use App\Form\CategoryType;
 use App\Form\CollectingType;
-use App\Repository\CollectingRepository;
+use App\Entity\UserCollecting;
+use App\Form\UserCollectingType;
 use App\Repository\ItemRepository;
+use App\Repository\CollectingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,6 +58,42 @@ class CollectingController extends AbstractController
 
         return $this->render('collecting/new.html.twig', [
             'addCollectingForm' => $addCollectingForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/collectings/add_user_collecting", name="add_user_collecting", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return void
+     */
+    public function add_user_collecting(Request $request, EntityManagerInterface $entityManager)
+    {
+        $addUserCollecting = new UserCollecting();
+
+        $addUserCollectingForm = $this->createForm(UserCollectingType::class, $addUserCollecting);
+
+        $addUserCollectingForm->handleRequest($request);
+
+        if ($addUserCollectingForm->isSubmitted() && $addUserCollectingForm->isValid()) {
+
+            $addUserCollecting = $addUserCollectingForm->getData();
+
+            $addMessage = 'You added a new collection';
+
+            $addUserCollecting->setUser($this->getUser());
+
+            $entityManager->persist($addUserCollecting);
+            $entityManager->flush();
+
+            $this->addFlash('success', $addMessage);
+
+            return $this->redirectToRoute('profile');
+        }
+
+        return $this->render('collecting/add_user_collecting.html.twig', [
+            'addUserCollectingForm' => $addUserCollectingForm->createView(),
         ]);
     }
 

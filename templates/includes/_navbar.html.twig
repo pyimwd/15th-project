@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="{{ path ("home") }}">Harmonious Project</a>
+		<a class="navbar-brand" href="{{ path ("home") }}">15th Project</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -13,10 +13,40 @@
 					<a class="nav-link" href="{{ path('collecting')}}">Collections</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Pricing</a>
+					<a class="nav-link" href="#">Anime</a>
 				</li>
-
+				<li class="nav-item">
+					<a class="nav-link" href="#">Manga</a>
+				</li>
 			</ul>
-		</li>
-	</li>
-</ul></div></div></nav>
+		</div>
+		<div class="d-flex">
+			{% if app.user %}
+				<div class="row">
+					<div class="col">
+						<button class="btn btn-dark">
+							<a href="{{ path('profile') }}" class="text-decoration-none text-white">
+								<i class="fa-solid fa-user"></i>
+								{{ app.user.firstname }}
+								{{ app.user.lastname }}</a>
+						</button>
+						<button class="btn btn-danger">
+							<a href="{{ path('app_logout') }}" class="text-decoration-none text-white">Sign out</a>
+						</button>
+					</div>
+				</div>
+			{% else %}
+				<div class="row">
+					<div class="col">
+						<button class="btn btn-secondary">
+							<a href="{{ path('app_login') }}" class="text-decoration-none text-white">Sign in</a>
+						</button>
+						<button class="btn btn-success">
+							<a href="{{ path('register') }}" class="text-decoration-none text-white">Sign up</a>
+						</button>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</nav>

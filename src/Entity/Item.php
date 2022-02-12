@@ -76,14 +76,14 @@ class Item
     private $category;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="item")
+     * @ORM\OneToMany(targetEntity=UserItem::class, mappedBy="item", orphanRemoval=true)
      */
-    private $users;
+    private $userItems;
 
     public function __construct()
     {
         $this->category = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->userItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,27 +212,30 @@ class Item
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|UserItem[]
      */
-    public function getUsers(): Collection
+    public function getUserItems(): Collection
     {
-        return $this->users;
+        return $this->userItems;
     }
 
-    public function addUser(User $user): self
+    public function addUserItem(UserItem $userItem): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addItem($this);
+        if (!$this->userItems->contains($userItem)) {
+            $this->userItems[] = $userItem;
+            $userItem->setItem($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUserItem(UserItem $userItem): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeItem($this);
+        if ($this->userItems->removeElement($userItem)) {
+            // set the owning side to null (unless already changed)
+            if ($userItem->getItem() === $this) {
+                $userItem->setItem(null);
+            }
         }
 
         return $this;

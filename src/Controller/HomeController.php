@@ -18,7 +18,7 @@ class HomeController extends AbstractController
     {
         $items = $itemRepository->findBy([], ['id' => 'DESC'], '6');
 
-        $collectings = $collectingRepository->findBy([], ['created_at' => 'DESC'], 4);
+        $collectings = $collectingRepository->findBy([], ['created_at' => 'DESC'], 2);
 
         // $collecting = $collectingRepository->findOneById($collecting->getId());
 

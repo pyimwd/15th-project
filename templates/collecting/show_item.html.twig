@@ -13,7 +13,7 @@
 
 		<div class="row mt-4 mb-4">
 			<div class="col-3">
-				<img src="{{ item.imageUrl }}" class="img-fluid rounded-start" alt="image of {{ item.title }}">
+				<img src="{{ item.imageUrl }}" class="img-fluid rounded-start rounded" alt="image of {{ item.title }}">
 			</div>
 			<div class="col">
 				<table class="table">
@@ -62,7 +62,7 @@
 					<a href="{{ path('collecting_show', {'collecting': collecting.id}) }}" class="text-decoration-none text-white">Back to list</a>
 				</button>
 				<button class="btn btn-primary">
-					<a href="{{ path('collecting_update_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-dark">Update</a>
+					<a href="{{ path('collecting_update_item', {'collecting': collecting.id, 'item': item.id}) }}" class="text-decoration-none text-white">Update</a>
 				</button>
 			</div>
 		</div>

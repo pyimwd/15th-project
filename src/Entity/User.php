@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Item;
+use App\Entity\Collecting;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -63,19 +66,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $created_at;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Collecting::class, inversedBy="users")
+     * @ORM\OneToMany(targetEntity=UserCollecting::class, mappedBy="user", orphanRemoval=true)
      */
-    private $collecting;
+    private $userCollectings;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Item::class, inversedBy="users")
+     * @ORM\OneToMany(targetEntity=UserItem::class, mappedBy="user", orphanRemoval=true)
      */
-    private $item;
+    private $userItems;
 
     public function __construct()
     {
-        $this->collecting = new ArrayCollection();
-        $this->item = new ArrayCollection();
+        $this->userCollectings = new ArrayCollection();
+        $this->userItems = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return (string) $this->firstname;
     }
 
     public function getId(): ?int
@@ -227,50 +235,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    // NOTE : Fonction pour auto set createdAt avec pour cela : ajout plus haut de : HasLifecycleCallbacks
+
     /**
-     * @return Collection|Collecting[]
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
      */
-    public function getCollecting(): Collection
+    public function updatedTimestamps(): void
     {
-        return $this->collecting;
+        $this->createdAt = new \DateTimeImmutable();
+
+        $this->setModifiedAt(new \DateTimeImmutable());
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
     }
 
-    public function addCollecting(Collecting $collecting): self
+    /**
+     * @return Collection|UserCollecting[]
+     */
+    public function getUserCollectings(): Collection
     {
-        if (!$this->collecting->contains($collecting)) {
-            $this->collecting[] = $collecting;
+        return $this->userCollectings;
+    }
+
+    public function addUserCollecting(UserCollecting $userCollecting): self
+    {
+        if (!$this->userCollectings->contains($userCollecting)) {
+            $this->userCollectings[] = $userCollecting;
+            $userCollecting->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeCollecting(Collecting $collecting): self
+    public function removeUserCollecting(UserCollecting $userCollecting): self
     {
-        $this->collecting->removeElement($collecting);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Item[]
-     */
-    public function getItem(): Collection
-    {
-        return $this->item;
-    }
-
-    public function addItem(Item $item): self
-    {
-        if (!$this->item->contains($item)) {
-            $this->item[] = $item;
+        if ($this->userCollectings->removeElement($userCollecting)) {
+            // set the owning side to null (unless already changed)
+            if ($userCollecting->getUser() === $this) {
+                $userCollecting->setUser(null);
+            }
         }
 
         return $this;
     }
 
-    public function removeItem(Item $item): self
+    /**
+     * @return Collection|UserItem[]
+     */
+    public function getUserItems(): Collection
     {
-        $this->item->removeElement($item);
+        return $this->userItems;
+    }
+
+    public function addUserItem(UserItem $userItem): self
+    {
+        if (!$this->userItems->contains($userItem)) {
+            $this->userItems[] = $userItem;
+            $userItem->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserItem(UserItem $userItem): self
+    {
+        if ($this->userItems->removeElement($userItem)) {
+            // set the owning side to null (unless already changed)
+            if ($userItem->getUser() === $this) {
+                $userItem->setUser(null);
+            }
+        }
 
         return $this;
     }

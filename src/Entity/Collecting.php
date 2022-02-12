@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Entity\Item;
 use App\Entity\User;
+use App\Entity\UserCollecting;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CollectingRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -43,14 +45,19 @@ class Collecting
     private $item;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="collecting")
+     * @ORM\OneToMany(targetEntity=UserCollecting::class, mappedBy="collecting", orphanRemoval=true)
      */
-    private $users;
+    private $userCollectings;
 
     public function __construct()
     {
         $this->item = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->userCollectings = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return (string) $this->name;
     }
 
     public function getId(): ?int
@@ -124,33 +131,6 @@ class Collecting
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addCollecting($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeCollecting($this);
-        }
-
-        return $this;
-    }
-
     // NOTE : Fonction pour auto set createdAt avec pour cela : ajout plus haut de : HasLifecycleCallbacks
 
     /**
@@ -165,5 +145,35 @@ class Collecting
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new \DateTimeImmutable());
         }
+    }
+
+    /**
+     * @return Collection|UserCollecting[]
+     */
+    public function getUserCollectings(): Collection
+    {
+        return $this->userCollectings;
+    }
+
+    public function addUserCollecting(UserCollecting $userCollecting): self
+    {
+        if (!$this->userCollectings->contains($userCollecting)) {
+            $this->userCollectings[] = $userCollecting;
+            $userCollecting->setCollecting($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserCollecting(UserCollecting $userCollecting): self
+    {
+        if ($this->userCollectings->removeElement($userCollecting)) {
+            // set the owning side to null (unless already changed)
+            if ($userCollecting->getCollecting() === $this) {
+                $userCollecting->setCollecting(null);
+            }
+        }
+
+        return $this;
     }
 }
