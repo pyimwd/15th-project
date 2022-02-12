@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My profile
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row mt-4">
+			<h1>{{ app.user.firstname }}
+				{{ app.user.lastname }}</h1>
+		</div>
+
+		<hr>
+		<section class="row mt-4">
+			<h2>My profile</h2>
+
+			<div class="row mt-2">
+				<div class="col-2">
+					<strong>Lastname</strong>
+					:</div>
+				<div class="col">{{ app.user.lastname }}</div>
+			</div>
+			<div class="row mt-2">
+				<div class="col-2">
+					<strong>Firstname</strong>
+					:</div>
+				<div class="col">{{ app.user.firstname }}</div>
+			</div>
+			<div class="row mt-2">
+				<div class="col-2">
+					<strong>E-mail</strong>
+					:</div>
+				<div class="col">{{ app.user.email }}</div>
+			</div>
+			{# <div class="row">
+																			<div class="col">
+																				<strong>Date de naissance</strong>
+																				:</div>
+																			<div class="col">{{ app.user.dateOfBirth }}</div>
+																		</div>
+																		<div class="row">
+																			<div class="col">
+																				<strong>Membre depuis le</strong>
+																				:</div>
+																			<div class="col">{{ app.user.createdAt }}</div>
+																		</div> #}
+		</section>
+
+		<hr>
+
+		<section class="row">
+			<h2>My collections</h2>
+			{% if is_granted('ROLE_USER') %}
+				<p class="text-end">
+					<a href="{{ path('add_user_collecting') }}" class="btn btn-success">Add a collection</a>
+				</p>
+			{% endif %}
+
+			{# {% for userCollecting in userCollectingList %}
+																																											{% include "includes/_card_collectione.html.twig" with {'collectione': userCollectione.collectione, 'profil': true} %}
+																																										{% endfor %} #}
+		</section>
+
+
+	</div>
+{% endblock %}
