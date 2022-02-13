@@ -18,15 +18,14 @@
 			</div>
 		{% endfor %}
 
-		<div
-			class="row">
-			{# {% if is_granted('ROLE_ADMIN') %} #}
-			<div class="col-6 text-start">
-				<a href="{{ path('collecting_new_item', {'collecting': collecting.id}) }}" class="btn btn-success">Add new item</a>
-			</div>
-			{# {% endif %} #}
-			<div class="col-6 text-end">Created at :
-				{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d H:i:s') : '' }}</div>
+		<div class="row">
+			{% if is_granted('ROLE_ADMIN') %}
+				<div class="col-6 text-start">
+					<a href="{{ path('collecting_new_item', {'collecting': collecting.id}) }}" class="btn btn-success">Add new item</a>
+				</div>
+			{% endif %}
+			<div class="col text-end">Created at :
+				{{ collecting.createdAt ? collecting.createdAt|date('Y-m-d') : '' }}</div>
 		</div>
 
 		<div class="row row-cols-1 row-cols-md-6 g-4 mt-4 mb-4">
@@ -39,13 +38,12 @@
 							{% else %}
 								<div class="card-header bg-light text-center text-dark d-flex align-items-center justify-content-center" style="min-height : 4rem;">{{ item.title }}</div>
 							{% endif %}
+
 							<div class="card-body" style="min-height : 20rem;">
 								<img src=" {{ item.imageUrl }} " class=" card-img-top" alt=" image of {{ item.title }} ">
-							{# <h5 class="card-title text-center">{{ item.title }}</h5> #}
-								{# <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> #}
 							</div>
 
-							{% if item.collecting.id == 1 %}
+							{% if (item.collecting.id == 1) and (is_granted('ROLE_ADMIN')) %}
 								<div class="card-footer bg-dark text-center">
 									<div class="row">
 										<div class="col d-flex justify-content-center">
@@ -71,7 +69,9 @@
 										</div>
 									</div>
 								</div>
-							{% else %}
+							{% elseif item.collecting.id == 1 %}
+								<div class="card-footer bg-dark text-center" style="min-height: 3rem;"></div>
+							{% elseif (item.collecting.id == 2) and (is_granted('ROLE_ADMIN')) %}
 								<div class="card-footer bg-light text-center">
 									<div class="row">
 										<div class="col d-flex justify-content-center">
@@ -97,6 +97,8 @@
 										</div>
 									</div>
 								</div>
+							{% elseif item.collecting.id == 2 %}
+								<div class="card-footer bg-light text-center" style="min-height: 3rem;"></div>
 							{% endif %}
 						</div>
 					</a>
@@ -107,35 +109,40 @@
 		<hr>
 
 		<div class="row mt-4 mb-4">
-			<div class="col text-start">
-				{{ include('collecting/_delete_form.html.twig') }}
-			</div>
-			<div class="col text-end">
-				<button class="btn btn-secondary">
-					<a href="{{ path('collecting') }}" class="text-decoration-none text-white">Back to list</a>
+			<div class="col text-start d-flex">
+				<button class="btn btn-secondary me-1">
+					<a href="{{ path('home') }}" class="text-decoration-none text-white">Back to homepage</a>
 				</button>
-				<button class="btn btn-primary">
-					<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}" class="text-decoration-none text-white">Update
-						{{ collecting.name }}</a>
-				</button>
+				{% if is_granted('ROLE_ADMIN') %}
+					{{ include('collecting/_delete_form.html.twig') }}
+				</div>
+				<div class="col text-end">
+					<button class="btn btn-secondary">
+						<a href="{{ path('collecting') }}" class="text-decoration-none text-white">Back to list</a>
+					</button>
+					<button class="btn btn-primary">
+						<a href="{{ path('collecting_edit', {'collecting': collecting.id}) }}" class="text-decoration-none text-white">Update
+							{{ collecting.name }}</a>
+					</button>
+				{% endif %}
 			</div>
 		</div>
 
 
 		{# {{ include('collecting/_delete_form.html.twig') }}
-																																																																																																											
-																																																																																																											    <div class="row">
-																																																																																																													<div class="card-body">
-																																																																																																														<a href="{{ path('collectione') }}" class="btn btn-primary">Retour à la liste</a>
-																																																																																																														{% if is_granted('ROLE_ADMIN') %}
-																																																																																																															<a href="{{ path('collectione_update', {'collectione': collectione.id}) }}" class="btn btn-info">
-																																																																																																																Modifier la collection
-																																																																																																															</a>
-																																																																																																															<a href="{{ path('collectione_delete', {'collectione': collectione.id}) }}" class="btn btn-info">
-																																																																																																																Supprimer la collection
-																																																																																																															</a>
-																																																																																																														{% endif %}
-																																																																																																													</div> #}
+																																																																																																																																																															
+																																																																																																																																																															    <div class="row">
+																																																																																																																																																																	<div class="card-body">
+																																																																																																																																																																		<a href="{{ path('collectione') }}" class="btn btn-primary">Retour à la liste</a>
+																																																																																																																																																																		{% if is_granted('ROLE_ADMIN') %}
+																																																																																																																																																																			<a href="{{ path('collectione_update', {'collectione': collectione.id}) }}" class="btn btn-info">
+																																																																																																																																																																				Modifier la collection
+																																																																																																																																																																			</a>
+																																																																																																																																																																			<a href="{{ path('collectione_delete', {'collectione': collectione.id}) }}" class="btn btn-info">
+																																																																																																																																																																				Supprimer la collection
+																																																																																																																																																																			</a>
+																																																																																																																																																																		{% endif %}
+																																																																																																																																																																	</div> #}
 
 	</container>
 {% endblock %}

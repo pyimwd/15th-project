@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Item;
 use App\Form\ItemType;
 use App\Entity\Category;
+use App\Entity\UserItem;
 use App\Entity\Collecting;
 use App\Form\CategoryType;
+use App\Form\UserItemType;
 use App\Form\CollectingType;
 use App\Entity\UserCollecting;
 use App\Form\UserCollectingType;
@@ -17,12 +19,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 
 class CollectingController extends AbstractController
 {
     /**
      * @Route("/collectings", name="collecting", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(CollectingRepository $collectingRepository): Response
     {
@@ -35,6 +40,7 @@ class CollectingController extends AbstractController
 
     /**
      * @Route("/collectings/new", name="collecting_new", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request, EntityManagerInterface $entityManager)
     {
@@ -98,6 +104,42 @@ class CollectingController extends AbstractController
     }
 
     /**
+     * @Route("/add_user_item", name="add_user_item", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return void
+     */
+    public function add_user_item(Request $request, EntityManagerInterface $entityManager)
+    {
+        $addUserItem = new UserItem();
+
+        $addUserItemForm = $this->createForm(UserItemType::class, $addUserItem);
+
+        $addUserItemForm->handleRequest($request);
+
+        if ($addUserItemForm->isSubmitted() && $addUserItemForm->isValid()) {
+
+            $addUserItem = $addUserItemForm->getData();
+
+            $addMessage = 'You added a new item';
+
+            $addUserItem->setUser($this->getUser());
+
+            $entityManager->persist($addUserItem);
+            $entityManager->flush();
+
+            $this->addFlash('success', $addMessage);
+
+            // return $this->redirectToRoute('profile');
+        }
+
+        return $this->render('collecting/add_user_item.html.twig', [
+            'addUserItemForm' => $addUserItemForm->createView(),
+        ]);
+    }
+
+    /**
      * @Route("/collectings/{collecting}", name="collecting_show", methods={"GET"})
      */
     public function show(Collecting $collecting, Item $item, ItemRepository $itemRepository): Response
@@ -114,6 +156,7 @@ class CollectingController extends AbstractController
 
     /**
      * @Route("/collectings/{collecting}/edit", name="collecting_edit", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Collecting $collecting, EntityManagerInterface $entityManager)
     {
@@ -134,6 +177,7 @@ class CollectingController extends AbstractController
 
     /**
      * @Route("/collectings/{id}/delete", name="collecting_delete")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Collecting $collecting, EntityManagerInterface $entityManager, Item $item)
     {
@@ -149,6 +193,7 @@ class CollectingController extends AbstractController
 
     /**
      * @Route("/collectings/{collecting}/new_item", name="collecting_new_item", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new_item(Collecting $collecting, Request $request, EntityManagerInterface $entityManager)
     {
@@ -193,6 +238,7 @@ class CollectingController extends AbstractController
 
     /**
      * @Route("/collectings/{collecting}/{item}/update_item", name="collecting_update_item")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function update_item(Collecting $collecting, Request $request, EntityManagerInterface $entityManager, Item $item, ItemRepository $itemRepository)
     {
@@ -235,6 +281,7 @@ class CollectingController extends AbstractController
 
     /**
      * @Route("/collectings/{collecting}/{item}/delete_item", name="collecting_delete_item")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete_item(Collecting $collecting, EntityManagerInterface $entityManager, Item $item)
     {

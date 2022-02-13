@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row mt-4">
+			<h1>Add item to my collection
+				{# {{ collecting.name }} #}
+			</h1>
+		</div>
+		<hr>
+
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		{{ form_start(addUserItemForm) }}
+		{{ form_row(addUserItemForm.item) }}
+
+
+		<div class="row mt-4 mb-4">
+			<div class="col text-end">
+				<button class="btn btn-secondary">
+					<a href="{{ path('profile') }}" class="text-decoration-none text-white">Back to profile</a>
+				</button>
+				<input type="submit" value="Add item" class="btn btn-success">
+			</div>
+		</div>
+
+		{# <div class="row">
+						
+									<div class="col text-end">
+										<input type="submit" value="Add item" class="btn btn-success">
+									</div>
+								</div> #}
+	</div>
+	{{ form_end(addUserItemForm) }}
+
+
+{% endblock %}

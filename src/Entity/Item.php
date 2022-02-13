@@ -86,6 +86,13 @@ class Item
         $this->userItems = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        // return (string) $this->title;
+        $string = $this->getTitle() . ' (' . $this->getCollecting() . ')';
+        return $string;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
