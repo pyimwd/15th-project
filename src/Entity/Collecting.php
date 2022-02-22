@@ -10,6 +10,8 @@ use App\Repository\CollectingRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=CollectingRepository::class)
@@ -26,6 +28,12 @@ class Collecting
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 255,
+     *     minMessage="Collection name must be at least 2 characters.",
+     *     maxMessage="Collection name must not exceed 255 characters."
+     * )
      */
     private $name;
 

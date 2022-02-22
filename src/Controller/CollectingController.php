@@ -122,6 +122,8 @@ class CollectingController extends AbstractController
 
             $addUserItem = $addUserItemForm->getData();
 
+            // dd($addUserItem);
+
             $addMessage = 'You added a new item';
 
             $addUserItem->setUser($this->getUser());
@@ -214,6 +216,8 @@ class CollectingController extends AbstractController
             // if(!$item->getId()) {
             //     $item->setCreatedAt(new \DateTimeImmutable());
             // }
+
+            // dd($collectingItemForm);
 
             $item = $collectingItemForm->getData();
 

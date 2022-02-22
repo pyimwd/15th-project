@@ -26,10 +26,10 @@ class ItemType extends AbstractType
             ])
             ->add('end_date', DateType::class, [
                 'widget' => 'single_text',
-                'input'  => 'datetime_immutable'
+                'input'  => 'datetime_immutable',
+                'required' => false,
             ])
             ->add('image_url')
-            // ->add('collecting')
             ->add(
                 'category',
                 EntityType::class,
@@ -39,10 +39,7 @@ class ItemType extends AbstractType
                     'choice_label' => 'name',
                     'expanded' => true,
                 ]
-            )
-            // ->add('users')
-            // ->add('add_item', SubmitType::class)
-        ;
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

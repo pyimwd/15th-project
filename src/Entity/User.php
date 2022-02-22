@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Entity\Item;
+use DateTimeInterface;
+use App\Entity\UserItem;
 use App\Entity\Collecting;
+use App\Entity\UserCollecting;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -26,6 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email()
      */
     private $email;
 
@@ -42,16 +47,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 255,
+     *     minMessage="Your firstname must be at least 2 characters.",
+     *     maxMessage="Your firstname must not exceed 255 characters."
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Your firstname cannot contain a number"
+     * )
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 255,
+     *     minMessage="Your lastname must be at least 2 characters.",
+     *     maxMessage="Your lastname must not exceed 255 characters."
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Your lastname cannot contain a number"
+     * )
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $date_of_birth;
 

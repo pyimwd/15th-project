@@ -26,13 +26,22 @@ class Item
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=2, max=255)
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 255,
+     *     minMessage="Title must be at least 2 characters.",
+     *     maxMessage="Title must not exceed 255 characters."
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Assert\Length(min=15)
+     * @Assert\Length(
+     *     min = 15,
+     *     max = 255,
+     *     minMessage="Synopsis must be at least 15 characters.",
+     * )
      */
     private $synopsis;
 
@@ -50,11 +59,13 @@ class Item
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Assert\Type("\DateTimeInterface")
      */
     private $start_date;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Assert\Type("\DateTimeInterface")
      */
     private $end_date;
 

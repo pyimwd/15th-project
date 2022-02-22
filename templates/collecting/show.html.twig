@@ -17,6 +17,11 @@
 				{{ message }}
 			</div>
 		{% endfor %}
+		{% for message in app.flashes('danger') %}
+			<div class="alert alert-danger">
+				{{ message }}
+			</div>
+		{% endfor %}
 
 		<div class="row">
 			{% if is_granted('ROLE_ADMIN') %}
@@ -130,19 +135,19 @@
 
 
 		{# {{ include('collecting/_delete_form.html.twig') }}
-																																																																																																																																																															
-																																																																																																																																																															    <div class="row">
-																																																																																																																																																																	<div class="card-body">
-																																																																																																																																																																		<a href="{{ path('collectione') }}" class="btn btn-primary">Retour à la liste</a>
-																																																																																																																																																																		{% if is_granted('ROLE_ADMIN') %}
-																																																																																																																																																																			<a href="{{ path('collectione_update', {'collectione': collectione.id}) }}" class="btn btn-info">
-																																																																																																																																																																				Modifier la collection
-																																																																																																																																																																			</a>
-																																																																																																																																																																			<a href="{{ path('collectione_delete', {'collectione': collectione.id}) }}" class="btn btn-info">
-																																																																																																																																																																				Supprimer la collection
-																																																																																																																																																																			</a>
-																																																																																																																																																																		{% endif %}
-																																																																																																																																																																	</div> #}
+																																																																																																																																																																			
+																																																																																																																																																																			    <div class="row">
+																																																																																																																																																																					<div class="card-body">
+																																																																																																																																																																						<a href="{{ path('collectione') }}" class="btn btn-primary">Retour à la liste</a>
+																																																																																																																																																																						{% if is_granted('ROLE_ADMIN') %}
+																																																																																																																																																																							<a href="{{ path('collectione_update', {'collectione': collectione.id}) }}" class="btn btn-info">
+																																																																																																																																																																								Modifier la collection
+																																																																																																																																																																							</a>
+																																																																																																																																																																							<a href="{{ path('collectione_delete', {'collectione': collectione.id}) }}" class="btn btn-info">
+																																																																																																																																																																								Supprimer la collection
+																																																																																																																																																																							</a>
+																																																																																																																																																																						{% endif %}
+																																																																																																																																																																					</div> #}
 
 	</container>
 {% endblock %}
